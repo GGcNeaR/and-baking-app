@@ -1,5 +1,6 @@
 package com.udacity.and.bakingapp.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -7,8 +8,9 @@ import android.widget.Toast;
 import com.udacity.and.bakingapp.R;
 import com.udacity.and.bakingapp.data.contracts.Recipe;
 
-public class RecipeActivity extends AppCompatActivity implements RecipeListFragment.OnRecipeClickListener {
+import static com.udacity.and.bakingapp.ui.RecipeDetailActivity.RECIPE_EXTRA;
 
+public class RecipeActivity extends AppCompatActivity implements RecipeListFragment.OnRecipeClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +20,8 @@ public class RecipeActivity extends AppCompatActivity implements RecipeListFragm
 
     @Override
     public void onRecipeClicked(Recipe recipe) {
-        Toast.makeText(this, recipe.getName(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, RecipeDetailActivity.class);
+        intent.putExtra(RECIPE_EXTRA, recipe);
+        startActivity(intent);
     }
 }
