@@ -9,6 +9,9 @@ import java.util.ArrayList;
  * Created on 5/20/2018.
  */
 public class Recipe implements Parcelable {
+
+    public static final String RECIPE_EXTRA = "RECIPE_EXTRA";
+
     private int id;
     private String name;
     private int servings;

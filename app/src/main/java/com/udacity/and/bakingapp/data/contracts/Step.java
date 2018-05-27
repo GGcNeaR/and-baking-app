@@ -7,6 +7,9 @@ import android.os.Parcelable;
  * Created on 5/20/2018.
  */
 public class Step implements Parcelable {
+
+    public static final String RECIPE_STEP_EXTRA = "RECIPE_STEP_EXTRA";
+
     private int id;
     private String shortDescription;
     private String description;
@@ -85,5 +88,15 @@ public class Step implements Parcelable {
         parcel.writeString(description);
         parcel.writeString(videoURL);
         parcel.writeString(thumbnailURL);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        } else if (obj instanceof Step) {
+            return ((Step) obj).id == id;
+        }
+        return false;
     }
 }

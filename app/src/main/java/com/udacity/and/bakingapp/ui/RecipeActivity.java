@@ -3,12 +3,10 @@ package com.udacity.and.bakingapp.ui;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.udacity.and.bakingapp.R;
 import com.udacity.and.bakingapp.data.contracts.Recipe;
 
-import static com.udacity.and.bakingapp.ui.RecipeDetailActivity.RECIPE_EXTRA;
 
 public class RecipeActivity extends AppCompatActivity implements RecipeListFragment.OnRecipeClickListener {
 
@@ -21,7 +19,7 @@ public class RecipeActivity extends AppCompatActivity implements RecipeListFragm
     @Override
     public void onRecipeClicked(Recipe recipe) {
         Intent intent = new Intent(this, RecipeDetailActivity.class);
-        intent.putExtra(RECIPE_EXTRA, recipe);
+        intent.putExtra(Recipe.RECIPE_EXTRA, recipe);
         startActivity(intent);
     }
 }

@@ -7,10 +7,12 @@ import android.widget.Toast;
 
 import com.udacity.and.bakingapp.R;
 import com.udacity.and.bakingapp.data.contracts.Recipe;
+import com.udacity.and.bakingapp.data.contracts.Step;
 
-public class RecipeDetailActivity extends AppCompatActivity {
+public class RecipeDetailActivity extends AppCompatActivity
+                implements RecipeStepListFragment.OnRecipeStepClickListener {
 
-    public static final String RECIPE_EXTRA = "RECIPE_EXTRA";
+    private Recipe recipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,17 +20,25 @@ public class RecipeDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_detail);
 
         Intent startIntent = getIntent();
-        if (startIntent == null || !startIntent.hasExtra(RECIPE_EXTRA)) {
+        if (startIntent == null || !startIntent.hasExtra(Recipe.RECIPE_EXTRA)) {
             Toast.makeText(this, "Missing Recipe!", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        Recipe recipe = startIntent.getParcelableExtra(RECIPE_EXTRA);
+        recipe = startIntent.getParcelableExtra(Recipe.RECIPE_EXTRA);
 
         RecipeStepListFragment recipeStepListFragment =
                 ((RecipeStepListFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_step_list_fragment));
 
         recipeStepListFragment.setRecipe(recipe);
+    }
+
+    @Override
+    public void onRecipeStepClicked(Step step) {
+        Intent intent = new Intent(this, RecipeStepDetailActivity.class);
+        intent.putExtra(Step.RECIPE_STEP_EXTRA, step);
+        intent.putExtra(Recipe.RECIPE_EXTRA, recipe);
+        startActivity(intent);
     }
 }
