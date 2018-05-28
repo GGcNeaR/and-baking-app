@@ -1,6 +1,7 @@
 package com.udacity.and.bakingapp.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,19 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.udacity.and.bakingapp.R;
 import com.udacity.and.bakingapp.data.contracts.Recipe;
 import com.udacity.and.bakingapp.data.contracts.Step;
@@ -23,6 +37,8 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     private TextView recipeStepDescriptionTextView;
     private Button prevRecipeStepButton;
     private Button nextRecipeStepButton;
+    private SimpleExoPlayer exoPlayer;
+    private PlayerView exoPlayerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +53,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             return;
         }
 
+        exoPlayerView = findViewById(R.id.playerView);
         recipeStepDescriptionTextView = findViewById(R.id.recipe_step_description_tv);
         prevRecipeStepButton = findViewById(R.id.prev_recipe_step_btn);
         nextRecipeStepButton = findViewById(R.id.next_recipe_step_btn);
@@ -72,6 +89,8 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         });
 
         refreshUI();
+
+        //initPlayer();
     }
 
     private void refreshUI() {
@@ -80,4 +99,27 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         prevRecipeStepButton.setEnabled(currentStepIndex != 0);
         nextRecipeStepButton.setEnabled(currentStepIndex != steps.size() - 1);
     }
+
+//    private void initPlayer() {
+//        if (exoPlayer == null) {
+//            TrackSelector trackSelector = new DefaultTrackSelector();
+//            LoadControl loadControl = new DefaultLoadControl();
+//
+//            @DefaultRenderersFactory.ExtensionRendererMode
+//            int extensionRendererMode = DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF;
+//            DefaultRenderersFactory renderersFactory =
+//                    new DefaultRenderersFactory(this, extensionRendererMode);
+//
+//            exoPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector, loadControl);
+//            exoPlayerView.setPlayer(exoPlayer);
+//
+//            String userAgent = Util.getUserAgent(this, "BakingApp");
+//
+//            MediaSource mediaSource = new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(this, userAgent))
+//                    .createMediaSource(Uri.parse(currentStep.getMediaURL()));
+//
+//            exoPlayer.prepare(mediaSource);
+//            exoPlayer.setPlayWhenReady(true);
+//        }
+//    }
 }

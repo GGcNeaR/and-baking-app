@@ -57,7 +57,13 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.OnReci
 
         recipeRecyclerView = view.findViewById(R.id.recipe_rv);
         recipeRecyclerView.setHasFixedSize(true);
-        recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+        int numberOfColumnsIfTablet = 3;
+        recipeRecyclerView.setLayoutManager(
+                isTablet ?
+                new GridLayoutManager(getActivity(), numberOfColumnsIfTablet) :
+                new LinearLayoutManager(getActivity()));
 
         recipeAdapter = new RecipeAdapter();
         recipeAdapter.setOnRecipeItemClickListener(this);

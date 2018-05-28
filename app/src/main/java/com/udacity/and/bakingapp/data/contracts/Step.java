@@ -2,6 +2,7 @@ package com.udacity.and.bakingapp.data.contracts;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 /**
  * Created on 5/20/2018.
@@ -54,6 +55,10 @@ public class Step implements Parcelable {
 
     public void setThumbnailURL(String thumbnailURL) {
         this.thumbnailURL = thumbnailURL;
+    }
+
+    public String getMediaURL() {
+        return !TextUtils.isEmpty(videoURL) ? videoURL : thumbnailURL;
     }
 
     protected Step(Parcel in) {
