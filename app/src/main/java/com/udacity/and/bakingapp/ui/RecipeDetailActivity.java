@@ -13,6 +13,9 @@ public class RecipeDetailActivity extends AppCompatActivity
                 implements RecipeStepListFragment.OnRecipeStepClickListener {
 
     private Recipe recipe;
+    private RecipeStepListFragment recipeStepListFragment;
+    private RecipeStepDetailFragment recipeStepDetailFragment;
+    private boolean isTablet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,19 +29,37 @@ public class RecipeDetailActivity extends AppCompatActivity
             return;
         }
 
+        isTablet = getResources().getBoolean(R.bool.isTablet);
+
         recipe = startIntent.getParcelableExtra(Recipe.RECIPE_EXTRA);
 
-        RecipeStepListFragment recipeStepListFragment =
-                ((RecipeStepListFragment) getSupportFragmentManager().findFragmentById(R.id.recipe_step_list_fragment));
+        recipeStepListFragment = ((RecipeStepListFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.recipe_step_list_fragment));
 
         recipeStepListFragment.setRecipe(recipe);
+
+        recipeStepDetailFragment = ((RecipeStepDetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.recipe_step_detail_fragment));
+
+        if (isTablet && recipe.getSteps().size() > 0) {
+            selectStep(recipe.getSteps().get(0));
+        }
     }
 
     @Override
     public void onRecipeStepClicked(Step step) {
-        Intent intent = new Intent(this, RecipeStepDetailActivity.class);
-        intent.putExtra(Step.RECIPE_STEP_EXTRA, step);
-        intent.putExtra(Recipe.RECIPE_EXTRA, recipe);
-        startActivity(intent);
+        if (isTablet) {
+            selectStep(step);
+        } else {
+            Intent intent = new Intent(this, RecipeStepDetailActivity.class);
+            intent.putExtra(Step.RECIPE_STEP_EXTRA, step);
+            intent.putExtra(Recipe.RECIPE_EXTRA, recipe);
+            startActivity(intent);
+        }
+    }
+
+    private void selectStep(Step step) {
+        recipeStepDetailFragment.changeRecipeStep(step);
+        // TODO highlight item ?
     }
 }

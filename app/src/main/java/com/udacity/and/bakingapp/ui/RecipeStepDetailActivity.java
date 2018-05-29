@@ -34,11 +34,10 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     private Step currentStep;
     private int currentStepIndex;
 
-    private TextView recipeStepDescriptionTextView;
     private Button prevRecipeStepButton;
     private Button nextRecipeStepButton;
-    private SimpleExoPlayer exoPlayer;
-    private PlayerView exoPlayerView;
+
+    private RecipeStepDetailFragment recipeStepDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +52,6 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             return;
         }
 
-        exoPlayerView = findViewById(R.id.playerView);
-        recipeStepDescriptionTextView = findViewById(R.id.recipe_step_description_tv);
         prevRecipeStepButton = findViewById(R.id.prev_recipe_step_btn);
         nextRecipeStepButton = findViewById(R.id.next_recipe_step_btn);
 
@@ -88,18 +85,23 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
             }
         });
 
+        recipeStepDetailFragment = ((RecipeStepDetailFragment) getSupportFragmentManager()
+                                        .findFragmentById(R.id.recipe_step_detail_fragment));
+
         refreshUI();
 
+        // TODO: move to RecipeStepDetailFragment ?
         //initPlayer();
     }
 
     private void refreshUI() {
-        recipeStepDescriptionTextView.setText(currentStep.getDescription());
+        recipeStepDetailFragment.changeRecipeStep(currentStep);
 
         prevRecipeStepButton.setEnabled(currentStepIndex != 0);
         nextRecipeStepButton.setEnabled(currentStepIndex != steps.size() - 1);
     }
 
+    // TODO: move to RecipeStepDetailFragment ?
 //    private void initPlayer() {
 //        if (exoPlayer == null) {
 //            TrackSelector trackSelector = new DefaultTrackSelector();
