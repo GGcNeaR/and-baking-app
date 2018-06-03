@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.udacity.and.bakingapp.R;
 import com.udacity.and.bakingapp.adapters.RecipeAdapter;
@@ -77,6 +78,8 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.OnReci
                 recipeList.clear();
                 if (recipes != null) {
                     recipeList.addAll(recipes);
+                } else {
+                    Toast.makeText(getActivity(), R.string.error_loading_recipe_list, Toast.LENGTH_SHORT).show();
                 }
                 recipeAdapter.notifyDataSetChanged();
             }

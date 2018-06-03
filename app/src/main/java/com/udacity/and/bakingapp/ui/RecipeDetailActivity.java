@@ -13,6 +13,7 @@ public class RecipeDetailActivity extends AppCompatActivity
                 implements RecipeStepListFragment.OnRecipeStepClickListener {
 
     private Recipe recipe;
+    private Step selectedStep;
     private RecipeStepListFragment recipeStepListFragment;
     private RecipeStepDetailFragment recipeStepDetailFragment;
     private boolean isTablet;
@@ -22,6 +23,13 @@ public class RecipeDetailActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
+        recipeStepListFragment = ((RecipeStepListFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.recipe_step_list_fragment));
+        recipeStepDetailFragment = ((RecipeStepDetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.recipe_step_detail_fragment));
+
+        isTablet = getResources().getBoolean(R.bool.isTablet);
+
         Intent startIntent = getIntent();
         if (startIntent == null || !startIntent.hasExtra(Recipe.RECIPE_EXTRA)) {
             Toast.makeText(this, "Missing Recipe!", Toast.LENGTH_SHORT).show();
@@ -29,26 +37,32 @@ public class RecipeDetailActivity extends AppCompatActivity
             return;
         }
 
-        isTablet = getResources().getBoolean(R.bool.isTablet);
-
         recipe = startIntent.getParcelableExtra(Recipe.RECIPE_EXTRA);
-
-        recipeStepListFragment = ((RecipeStepListFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.recipe_step_list_fragment));
-
         recipeStepListFragment.setRecipe(recipe);
 
-        recipeStepDetailFragment = ((RecipeStepDetailFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.recipe_step_detail_fragment));
+        if (isTablet) {
+            if (savedInstanceState != null) {
+                selectedStep = savedInstanceState.getParcelable(Step.RECIPE_STEP_EXTRA);
+            } else if (recipe.getSteps().size() > 0) {
+                selectedStep = recipe.getSteps().get(0);
+            }
+            selectStep(selectedStep);
+        }
+    }
 
-        if (isTablet && recipe.getSteps().size() > 0) {
-            selectStep(recipe.getSteps().get(0));
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (isTablet && selectedStep != null) {
+            outState.putParcelable(Step.RECIPE_STEP_EXTRA, selectedStep);
         }
     }
 
     @Override
     public void onRecipeStepClicked(Step step) {
         if (isTablet) {
+            selectedStep = step;
             selectStep(step);
         } else {
             Intent intent = new Intent(this, RecipeStepDetailActivity.class);
@@ -60,6 +74,5 @@ public class RecipeDetailActivity extends AppCompatActivity
 
     private void selectStep(Step step) {
         recipeStepDetailFragment.changeRecipeStep(step);
-        // TODO highlight item ?
     }
 }

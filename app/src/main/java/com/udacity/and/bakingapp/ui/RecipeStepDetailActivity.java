@@ -44,6 +44,9 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step_detail);
 
+        recipeStepDetailFragment = ((RecipeStepDetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.recipe_step_detail_fragment));
+
         Intent startIntent = getIntent();
         if (startIntent == null ||
                 !startIntent.hasExtra(Step.RECIPE_STEP_EXTRA) || !startIntent.hasExtra(Recipe.RECIPE_EXTRA)) {
@@ -56,9 +59,14 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         nextRecipeStepButton = findViewById(R.id.next_recipe_step_btn);
 
         Recipe recipe = startIntent.getParcelableExtra(Recipe.RECIPE_EXTRA);
-        currentStep = startIntent.getParcelableExtra(Step.RECIPE_STEP_EXTRA);
-
         steps = recipe.getSteps();
+
+        if (savedInstanceState != null) {
+            currentStep = savedInstanceState.getParcelable(Step.RECIPE_STEP_EXTRA);
+        } else {
+            currentStep = startIntent.getParcelableExtra(Step.RECIPE_STEP_EXTRA);
+        }
+
         currentStepIndex = recipe.getSteps().indexOf(currentStep);
 
         prevRecipeStepButton.setOnClickListener(new View.OnClickListener() {
@@ -84,14 +92,20 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
-        recipeStepDetailFragment = ((RecipeStepDetailFragment) getSupportFragmentManager()
-                                        .findFragmentById(R.id.recipe_step_detail_fragment));
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         refreshUI();
+    }
 
-        // TODO: move to RecipeStepDetailFragment ?
-        //initPlayer();
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(Step.RECIPE_STEP_EXTRA, currentStep);
     }
 
     private void refreshUI() {
@@ -100,28 +114,4 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         prevRecipeStepButton.setEnabled(currentStepIndex != 0);
         nextRecipeStepButton.setEnabled(currentStepIndex != steps.size() - 1);
     }
-
-    // TODO: move to RecipeStepDetailFragment ?
-//    private void initPlayer() {
-//        if (exoPlayer == null) {
-//            TrackSelector trackSelector = new DefaultTrackSelector();
-//            LoadControl loadControl = new DefaultLoadControl();
-//
-//            @DefaultRenderersFactory.ExtensionRendererMode
-//            int extensionRendererMode = DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF;
-//            DefaultRenderersFactory renderersFactory =
-//                    new DefaultRenderersFactory(this, extensionRendererMode);
-//
-//            exoPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector, loadControl);
-//            exoPlayerView.setPlayer(exoPlayer);
-//
-//            String userAgent = Util.getUserAgent(this, "BakingApp");
-//
-//            MediaSource mediaSource = new ExtractorMediaSource.Factory(new DefaultDataSourceFactory(this, userAgent))
-//                    .createMediaSource(Uri.parse(currentStep.getMediaURL()));
-//
-//            exoPlayer.prepare(mediaSource);
-//            exoPlayer.setPlayWhenReady(true);
-//        }
-//    }
 }

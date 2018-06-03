@@ -24,6 +24,10 @@ public class RecipeRepository {
     public MutableLiveData<ArrayList<Recipe>> getRecipeList() {
         final MutableLiveData<ArrayList<Recipe>> mutableLiveData = new MutableLiveData<>();
 
+        if (mutableLiveData.getValue() != null) {
+            return mutableLiveData;
+        }
+
         OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
         okHttpClient.connectTimeout(60, TimeUnit.SECONDS);
         okHttpClient.readTimeout(60, TimeUnit.SECONDS);
@@ -47,16 +51,16 @@ public class RecipeRepository {
                     if (recipes != null) {
                         mutableLiveData.setValue(recipes);
                     } else {
-                        mutableLiveData.setValue(new ArrayList<Recipe>());
+                        mutableLiveData.setValue(null);
                     }
                 } else {
-                    // TODO: handle other cases
+                    mutableLiveData.setValue(null);
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
-                // TODO: handle errors
+
             }
         });
 
